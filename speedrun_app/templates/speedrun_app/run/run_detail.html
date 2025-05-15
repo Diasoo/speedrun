@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+    <h1>Detail Běhu</h1>
+
+    <div>
+        <strong>Hra:</strong> {{ run.game }}
+    </div>
+    <div>
+        <strong>Uživatel:</strong> {{ run.user }}
+    </div>
+    <div>
+        <strong>Čas:</strong> {{ run.time }}
+    </div>
+    <div>
+        <strong>Platforma:</strong> {{ run.platform }}
+    </div>
+    <div>
+        <strong>Kategorie:</strong> {{ run.category }}
+    </div>
+    <div>
+        <strong>Datum:</strong> {{ run.date }}
+    </div>
+
+    {% if user.is_staff %}
+        <a href="{% url 'run_update' run.pk %}" class="btn btn-primary">Upravit</a>
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteRunModal">
+            Smazat
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="deleteRunModal" tabindex="-1" aria-labelledby="deleteRunModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteRunModalLabel">Potvrdit smazání</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
+                    </div>
+                    <div class="modal-body">
+                        Opravdu chcete smazat tento běh?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zrušit</button>
+                        <form method="post" action="{% url 'run_delete' run.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Smazat</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <a href="{% url 'run_list' %}" class="btn btn-secondary">Zpět na seznam</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Seznam uživatelů{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <h1>Seznam uživatelů</h1>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Uživatelské jméno</th>
+          <th>Datum registrace</th>
+          <th>Poslední přihlášení</th>
+          <th>Role</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+          <tr>
+            <td><a href="{% url 'user_detail' pk=user.pk %}" class="btn btn-secondary">{{ user.username }}</a></td>
+            <td>{{ user.date_joined|date:"d.m.Y H:i" }}</td>
+            <td>{{ user.last_login|date:"d.m.Y H:i" }}</td>
+            <td>
+              {% if user.is_superuser %}
+                Administrator
+              {% elif user.is_staff %}
+                Moderátor
+              {% else %}
+                Uživatel
+              {% endif %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

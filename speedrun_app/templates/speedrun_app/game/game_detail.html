@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Detail hry: {{ game.name }}
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title">{{ game.title }}</h1>
+                <p class="card-text"><strong>Popis:</strong> {{ game.description }}</p>
+                <p class="card-text"><strong>Datum vydání:</strong> {{ game.release_date }}</p>
+                <p class="card-text"><strong>Vývojář:</strong> {{ game.developer }}</p>
+                <p class="card-text"><strong>Vydavatel:</strong> {{ game.publisher }}</p>
+                {% if user.is_staff %}
+                 <a href="{% url 'game_update' pk=game.pk %}" class="btn btn-warning">Upravit</a>
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteGameModal">
+                    Smazat
+                </button>
+                {% endif %}
+                <a href="{% url 'game_list' %}" class="btn btn-primary">Zpět na seznam her</a>
+            </div>
+        </div>
+
+        <h2>Runy</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Hráč</th>
+                    <th>Čas</th>
+                    <th>Datum</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for run in game.speedruns.all %}
+                <tr>
+                    <td>{{ run.user.username }}</td>
+                    <td>{{ run.time }}</td>
+                    <td>{{ run.date }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3">Žádné runy pro tuto hru.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Modal -->
+        <div class="modal fade" id="deleteGameModal" tabindex="-1" aria-labelledby="deleteGameModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteGameModalLabel">Potvrdit smazání</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
+                    </div>
+                    <div class="modal-body">
+                        Opravdu chcete smazat hru {{ game.name }}?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zrušit</button>
+                        <form id="delete-game-form" method="post" action="{% url 'game_delete' pk=game.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Smazat</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Seznam žánrů
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Seznam žánrů</h1>
+        <a href="{% url 'genre_create' %}" class="btn btn-success">Přidat žánr</a>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Název</th>
+                    <th>Popis</th>
+                    <th>Akce</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for genre in genres %}
+                    <tr>
+                        <td>{{ genre.name }}</td>
+                        <td>{{ genre.description }}</td>
+                        <td>
+                            <a href="{% url 'genre_update' pk=genre.pk %}" class="btn btn-warning btn-sm">Upravit</a>
+                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteGenreModal{{ genre.pk }}">
+                                Smazat
+                            </button>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="deleteGenreModal{{ genre.pk }}" tabindex="-1" aria-labelledby="deleteGenreModalLabel{{ genre.pk }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteGenreModalLabel{{ genre.pk }}">Potvrdit smazání</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Opravdu chcete smazat žánr {{ genre.name }}?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zrušit</button>
+                                            <form method="post" action="{% url 'genre_delete' pk=genre.pk %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-danger">Smazat</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

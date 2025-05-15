@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+    <h1>Seznam Běhů</h1>
+    {% if user.is_staff %}
+    	<a href="{% url 'run_create' %}" class="btn btn-success">Přidat nový běh</a>
+    {% endif %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Hra</th>
+                <th>Uživatel</th>
+                <th>Čas</th>
+                <th>Platforma</th>
+                <th>Kategorie</th>
+                <th>Datum</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for run in runs %}
+                <tr>
+                    <td><a href="{% url 'game_detail' pk=run.game.pk %}" class="btn btn-secondary">{{ run.game }}</a></td>
+                    <td><a href="{% url 'user_detail' pk=run.user.pk %}" class="btn btn-secondary">{{ run.user }}</a></td>
+                    <td><a href="{% url 'run_detail' pk=run.pk %}" class="btn btn-secondary">{{ run.time }}</a></td>
+                    <td>{{ run.platform }}</td>
+                    <td>{{ run.category }}</td>
+                    <td>{{ run.date }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+{% endblock %}
